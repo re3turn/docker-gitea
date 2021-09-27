@@ -1,0 +1,52 @@
+version: '3.7'
+services:
+  gitea:
+    image: gitea/gitea
+    volumes:
+      - data:/data
+    ports:
+      - "53000:3000"
+      - "55522:22"
+    environment:
+      - VIRTUAL_HOST
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST
+      - LETSENCRYPT_EMAIL
+      - DB_TYPE=postgres
+      - DB_HOST=db:5432
+      - DB_NAME=gitea
+      - DB_USER=gitea
+      - DB_PASSWD
+      - DOMAIN
+      - SSH_DOMAIN
+      - ROOT_URL
+    depends_on:
+      - db
+    restart: always
+    networks:
+      - proxy-network
+      - gitea-network
+  db:
+    image: postgres:alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=gitea
+      - POSTGRES_USER=gitea
+      - POSTGRES_PASSWORD
+      - TZ
+    networks:
+      - gitea-network
+    volumes:
+      - db:/var/lib/postgresql/data
+
+volumes:
+  data:
+  db:
+
+networks:
+  proxy-network:
+    external:
+      name: proxy_network
+  gitea-network:
+    name: gitea_network
+
