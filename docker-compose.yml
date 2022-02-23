@@ -2,12 +2,15 @@ version: '3.7'
 services:
   gitea:
     image: gitea/gitea
+    container_name: gitea_web
     volumes:
       - data:/data
     ports:
       - "53000:3000"
       - "55522:22"
     environment:
+      - USER_UID=1000
+      - USER_GID=1000
       - VIRTUAL_HOST
       - VIRTUAL_PORT=3000
       - LETSENCRYPT_HOST
@@ -32,6 +35,7 @@ services:
       - gitea-network
   db:
     image: postgres:alpine
+    container_name: gitea_db
     restart: always
     environment:
       - POSTGRES_DB=gitea
