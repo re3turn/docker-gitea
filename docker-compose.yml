@@ -20,6 +20,10 @@ services:
       - DOMAIN
       - SSH_DOMAIN
       - ROOT_URL
+    logging:
+      options:
+        max-file: '3'
+        max-size: 10m
     depends_on:
       - db
     restart: always
@@ -34,6 +38,10 @@ services:
       - POSTGRES_USER=gitea
       - POSTGRES_PASSWORD
       - TZ
+    logging:
+      options:
+        max-file: '3'
+        max-size: 10m
     networks:
       - gitea-network
     volumes:
